@@ -44,9 +44,13 @@ class ClientSetup:
 
         d = data[0]
         if "ltp" not in d: return
+        
+        print(d)
+        if not d: return
+        if not d['tk']: return
 
         # Normalize once
-        latest_tick = {
+        latest_tick[d["tk"]] = {
             "token": d["tk"],
             "exchange": d["e"],
             "ltp": float(d["ltp"]),
@@ -54,18 +58,44 @@ class ClientSetup:
             "timestamp": d.get("ltt", d.get("fdtm"))
         }
         
+        
     def subscribe_channels(self):
         # Non_index Sockets
         instrument_tokens = [
-            {"instrument_token": "486608", "exchange_segment": "mcx_fo"}, #CRUDEOIL JAN 
+            {"instrument_token": "71403", "exchange_segment": "nse_fo"}, #NIFTY25DEC26000CE
+            # {"instrument_token": "71399", "exchange_segment": "nse_fo"}, #NIFTY25DEC26000PE
+            # {"instrument_token": "486608", "exchange_segment": "mcx_fo"}, #CRUDEOIL JAN 
+            ]
+        
+        self.client.subscribe(instrument_tokens=instrument_tokens,isIndex=False,isDepth=False)
+        
+        instrument_tokens = [
+            # {"instrument_token": "71403", "exchange_segment": "nse_fo"}, #NIFTY25DEC26000CE
+            {"instrument_token": "71399", "exchange_segment": "nse_fo"}, #NIFTY25DEC26000PE
+            # {"instrument_token": "486608", "exchange_segment": "mcx_fo"}, #CRUDEOIL JAN 
             ]
         
         self.client.subscribe(instrument_tokens=instrument_tokens,isIndex=False,isDepth=False)
 
         #Index Sockets
         instrument_tokens = [
-            {"instrument_token": "Nifty 50", "exchange_segment": "nse_cm"},
+            # {"instrument_token": "Nifty 50", "exchange_segment": "nse_cm"},
             ]
         
         self.client.subscribe(instrument_tokens=instrument_tokens,isIndex=True,isDepth=False)
 
+###################################################
+
+# import asyncio
+
+# totp = "980808"
+# setup = ClientSetup()
+# client = setup.login(totp)
+# instrument_tokens = [{"instrument_token": "Nifty 50", "exchange_segment": "nse_cm"},]
+# print("Nifty Current Price: ",client.quotes(instrument_tokens = instrument_tokens, quote_type = "all")[0]['ltp'])
+
+# from time import sleep
+
+# while True:
+#     print(latest_tick)
+#     sleep(1)
