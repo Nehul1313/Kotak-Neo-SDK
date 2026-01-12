@@ -4,7 +4,7 @@ class TickWriter:
         self.batch_size = batch_size
         self.buffer = []
 
-    def add(self, tick):
+    def add_from_ws(self, tick):
         self.buffer.append(tick)
         if len(self.buffer) >= self.batch_size:
             self.flush()

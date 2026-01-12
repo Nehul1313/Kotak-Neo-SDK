@@ -6,14 +6,10 @@ def attach_ws_handlers(client, writer, instruments):
 
     def on_open(msg):
         logger.info("WebSocket connected")
-        client.subscribe(
-            instrument_tokens=instruments,
-            isIndex=False,
-            isDepth=False
-        )
 
     def on_message(msg):
         try:
+            logger.info(f"WS message: {msg}")
             writer.add_from_ws(msg)
         except Exception as e:
             logger.error(e)
@@ -28,3 +24,9 @@ def attach_ws_handlers(client, writer, instruments):
     client.on_message = on_message
     client.on_error = on_error
     client.on_close = on_close
+    
+    client.subscribe(
+            instrument_tokens=instruments,
+            isIndex=False,
+            isDepth=False
+        )
